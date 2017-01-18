@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
-import * as firebase from 'firebase'
+import firebase from 'firebase'
 
 // Initialize Firebase
 const config = {
@@ -12,23 +12,28 @@ const config = {
 }
 
 firebase.initializeApp(config);
-const nameRef = firebase.database().ref().child('name')
 
-class App extends Component{
+
+class App extends React.Component{
   constructor() {
     super()
     this.state = { name: 'Data firebase' }
+  }
+
+  componentWillMount() {
+    const nameRef = firebase.database().ref().child('object').child('name')
+    nameRef.on('value', (snapshot) => {
+      this.setState({
+        name: snapshot.val()
+      })
+    })
   }
 
   render () {
     return <h2>{this.state.name}</h2>
   }
 
-  nameRef.on('value', snapshot => {
-    this.setState({
-      name: snapshot.val()
-    })
-  })
+
 
 }
 
